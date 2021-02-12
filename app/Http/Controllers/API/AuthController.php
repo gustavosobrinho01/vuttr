@@ -49,7 +49,7 @@ class AuthController extends Controller
     {
         auth()->user()->tokens()->delete();
 
-        return response()->json([], Response::HTTP_NO_CONTENT);
+        return response()->noContent();
     }
 
     public function destroy(Request $request)
@@ -57,6 +57,6 @@ class AuthController extends Controller
         auth()->user()->tokens()->delete();
         auth()->user()->delete();
 
-        return response()->json([], Response::HTTP_NO_CONTENT);
+        return response()->noContent();
     }
 }
