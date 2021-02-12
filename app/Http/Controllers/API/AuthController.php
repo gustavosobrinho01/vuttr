@@ -51,4 +51,12 @@ class AuthController extends Controller
 
         return response()->json([], Response::HTTP_NO_CONTENT);
     }
+
+    public function destroy(Request $request)
+    {
+        auth()->user()->tokens()->delete();
+        auth()->user()->delete();
+
+        return response()->json([], Response::HTTP_NO_CONTENT);
+    }
 }

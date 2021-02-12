@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\API\AuthController;
+use App\Http\Controllers\API\ToolController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,16 +17,19 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::prefix('auth')
+    ->name('auth.')
     ->group(function () {
-        Route::post('register', [\App\Http\Controllers\API\AuthController::class, 'register']);
-        Route::post('login', [\App\Http\Controllers\API\AuthController::class, 'login']);
+        Route::post('register', [AuthController::class, 'register'])->name('register');
+        Route::post('login', [AuthController::class, 'login'])->name('login');
     });
 
 Route::middleware('auth:sanctum')
     ->group(function () {
-        Route::post('auth/logout', [\App\Http\Controllers\API\AuthController::class, 'logout']);
+        Route::post('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
+        Route::post('auth/destroy', [AuthController::class, 'destroy'])->name('auth.destroy');
 
-        Route::get('/user', function (Request $request) {
+        Route::get('user', function (Request $request) {
             return $request->user();
         });
     });
+
