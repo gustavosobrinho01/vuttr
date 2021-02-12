@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Http\Requests\API\Auth;
+namespace App\Http\Requests\API\Profile;
 
 use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
 
-class UpdateRequest extends FormRequest
+class RegisterRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -26,19 +26,9 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
-                'required',
-                'string',
-                'min:3',
-                'max:255'
-            ],
-            'email' => [
-                'required',
-                'email',
-                'min:3',
-                'max:255',
-                Rule::unique((new User)->getTable())->ignore(auth()->id())
-            ],
+            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'email' => ['required', 'email', 'min:3', 'max:255', Rule::unique((new User())->getTable())],
+            'password' => ['required', 'min:8', 'max:255', 'confirmed'],
         ];
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Requests\API\Auth;
+namespace App\Http\Requests\API\Profile;
 
 use App\Rules\CurrentPasswordCheckRule;
 use Illuminate\Foundation\Http\FormRequest;

@@ -1,7 +1,7 @@
 <?php
 
 use App\Http\Controllers\API\Auth\AuthController;
-use App\Http\Controllers\API\Auth\ProfileController;
+use App\Http\Controllers\API\Profile\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::prefix('profile')

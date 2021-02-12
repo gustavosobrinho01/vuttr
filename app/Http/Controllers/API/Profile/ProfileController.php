@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Http\Controllers\API\Auth;
+namespace App\Http\Controllers\API\Profile;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\API\Auth\RegisterRequest;
-use App\Http\Requests\API\Auth\UpdatePasswordRequest;
-use App\Http\Requests\API\Auth\UpdateRequest;
+use App\Http\Requests\API\Profile\RegisterRequest;
+use App\Http\Requests\API\Profile\UpdatePasswordRequest;
+use App\Http\Requests\API\Profile\UpdateRequest;
 use App\Models\User;
 use Symfony\Component\HttpFoundation\Response;
 
