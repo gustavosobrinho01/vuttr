@@ -25,6 +25,8 @@ Route::prefix('auth')
 
 Route::middleware('auth:sanctum')
     ->group(function () {
+        Route::put('auth/update', [AuthController::class, 'update'])->name('auth.update');
+        Route::put('auth/update-password', [AuthController::class, 'updatePassword'])->name('auth.updatePassword');
         Route::post('auth/logout', [AuthController::class, 'logout'])->name('auth.logout');
         Route::post('auth/destroy', [AuthController::class, 'destroy'])->name('auth.destroy');
 
