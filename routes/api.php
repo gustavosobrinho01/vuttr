@@ -1,32 +1,23 @@
 <?php
 
-use App\Http\Controllers\API\AuthController;
-use App\Http\Controllers\API\ToolController;
-use Illuminate\Http\Request;
+use App\Http\Controllers\API\Auth\AuthController;
+use App\Http\Controllers\API\Auth\ProfileController;
 use Illuminate\Support\Facades\Route;
+
+Route::prefix('profile')
+    ->name('profile.')
+    ->group(function () {
+        Route::post('register', [ProfileController::class, 'register'])->name('register');
+        Route::put('update', [ProfileController::class, 'update'])->name('update');
+        Route::put('update-password', [ProfileController::class, 'updatePassword'])->name('updatePassword');
+        Route::delete('destroy', [ProfileController::class, 'destroy'])->name('destroy');
+    });
 
 Route::prefix('auth')
     ->name('auth.')
     ->group(function () {
-        Route::post('register', [AuthController::class, 'register'])->name('register');
         Route::post('login', [AuthController::class, 'login'])->name('login');
-    });
-
-Route::middleware('auth:sanctum')
-    ->group(function () {
-        Route::prefix('auth')
-            ->name('auth.')
-            ->group(function () {
-                Route::put('update', [AuthController::class, 'update'])->name('update');
-                Route::put('update-password', [AuthController::class, 'updatePassword'])->name('updatePassword');
-                Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-                Route::delete('destroy', [AuthController::class, 'destroy'])->name('destroy');
-            });
-
-        Route::get('user', function (Request $request) {
-            return $request->user();
-        });
-
-        Route::apiResource('tools', ToolController::class);
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('me', [AuthController::class, 'me'])->name('me');
     });
 
