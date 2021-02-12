@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\Tool\IndexRequest;
 use App\Http\Requests\API\Tool\StoreRequest;
 use App\Http\Requests\API\Tool\UpdateRequest;
 use App\Http\Resources\API\Tool\ToolResource;
@@ -15,9 +16,13 @@ class ToolController extends Controller
         $this->authorizeResource(Tool::class, 'tool');
     }
 
-    public function index()
+    public function index(IndexRequest $request)
     {
-        $tools = auth()->user()->tools()->paginate();
+        $tools = auth()->user()->tools()
+            ->when($request->has('tag'), function ($query) use ($request) {
+                $query->whereJsonContains('tags', $request->tag);
+            })
+            ->paginate();
 
         return ToolResource::collection($tools);
     }
