@@ -6,6 +6,7 @@ use App\Models\Tool;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
@@ -43,6 +44,9 @@ class AuthControllerTest extends TestCase
         $attributes['email'] = 'teste@validation.update';
         $attributes['password'] = '321321321';
 
+        $this->json('put', route('api.auth.update'), $attributes)
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+
         $this->actingAs($user)
             ->json('put', route('api.auth.update'), $attributes)
             ->assertOk();
@@ -65,6 +69,9 @@ class AuthControllerTest extends TestCase
         $attributes['current_password'] = '123123123';
         $attributes['password'] = '321321321';
         $attributes['password_confirmation'] = '321321321';
+
+        $this->json('put', route('api.auth.updatePassword'), $attributes)
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
 
         $this->actingAs($user)
             ->json('put', route('api.auth.updatePassword'), $attributes)
@@ -116,6 +123,9 @@ class AuthControllerTest extends TestCase
     {
         $user = User::factory()->create();
 
+        $this->json('post', route('api.auth.logout'))
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
+
         $this->actingAs($user)
             ->json('post', route('api.auth.logout'))
             ->assertNoContent();
@@ -130,9 +140,11 @@ class AuthControllerTest extends TestCase
     {
         $user = User::factory()->has(Tool::factory()->count(5))->create();
 
-        $this->actingAs($user);
+        $this->json('delete', route('api.auth.destroy'))
+            ->assertStatus(Response::HTTP_UNAUTHORIZED);
 
-        $this->json('post', route('api.auth.destroy'))
+        $this->actingAs($user)
+            ->json('delete', route('api.auth.destroy'))
             ->assertNoContent();
 
         $this->assertDeleted($user)
