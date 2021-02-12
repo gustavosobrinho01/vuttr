@@ -21,6 +21,10 @@ Route::prefix('auth')
     });
 
 Route::middleware('auth:sanctum')
-    ->get('/user', function (Request $request) {
-        return $request->user();
+    ->group(function () {
+        Route::post('auth/logout', [\App\Http\Controllers\API\AuthController::class, 'logout']);
+
+        Route::get('/user', function (Request $request) {
+            return $request->user();
+        });
     });
