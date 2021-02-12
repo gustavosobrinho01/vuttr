@@ -4,7 +4,6 @@ namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Auth\LoginRequest;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,7 +43,7 @@ class AuthController extends Controller
         ], Response::HTTP_OK);
     }
 
-    public function logout(Request $request)
+    public function logout()
     {
         auth()->user()->tokens()->delete();
 

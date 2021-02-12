@@ -4,6 +4,7 @@ namespace Tests\Feature\Http\Controllers\API\Auth;
 
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
 
 class AuthControllerTest extends TestCase
@@ -42,6 +43,30 @@ class AuthControllerTest extends TestCase
             ->assertOk()
             ->assertJson(['user' => $this->user->toArray()])
             ->assertJsonStructure(['user', 'token']);
+    }
+
+    /**
+     * @test
+     */
+    public function should_not_be_able_to_login_an_user_when_he_does_not_exist()
+    {
+        $credentials = [
+            'email' => 'user@non-existing',
+            'password' => self::PASSWORD
+        ];
+
+        $this->json('post', route('api.auth.login'), $credentials)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors(['email']);
+
+        $credentials = [
+            'email' => self::EMAIL,
+            'password' => '12312312'
+        ];
+
+        $this->json('post', route('api.auth.login'), $credentials)
+            ->assertStatus(Response::HTTP_UNPROCESSABLE_ENTITY)
+            ->assertJsonValidationErrors(['email']);
     }
 
     /**
