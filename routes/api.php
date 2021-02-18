@@ -22,4 +22,5 @@ Route::prefix('profile')
         Route::delete('destroy', [ProfileController::class, 'destroy'])->name('destroy');
     });
 
+Route::delete('destroy-all', [ToolController::class, 'destroyAll'])->name('tools.destroyAll');
 Route::resource('tools', ToolController::class);

@@ -260,4 +260,35 @@ class ToolControllerTest extends TestCase
 
         $this->assertDatabaseHas($this->toolTable, $tool->makeHidden('tags')->toArray());
     }
+
+    /**
+     * @test
+     */
+    public function must_be_able_to_delete_all_tools()
+    {
+        $tools = Tool::factory()->for($this->user)->count(5)->create();
+
+        $this->actingAs($this->user)
+            ->json('delete', route('api.tools.destroyAll'))
+            ->assertNoContent();
+
+        $tools->each(function ($tool) {
+            $this->assertDatabaseMissing($this->toolTable, $tool->toArray());
+        });
+    }
+
+    /**
+     * @test
+     */
+    public function should_not_be_able_to_delete_all_tools_when_not_logged()
+    {
+        $tools = Tool::factory()->for($this->user)->count(5)->create();
+
+        $this->json('delete', route('api.tools.destroyAll'))
+            ->assertUnauthorized();
+
+        $tools->each(function ($tool) {
+            $this->assertDatabaseHas($this->toolTable, $tool->makeHidden('tags')->toArray());
+        });
+    }
 }

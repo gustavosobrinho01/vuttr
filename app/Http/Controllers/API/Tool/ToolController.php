@@ -53,4 +53,11 @@ class ToolController extends Controller
 
         return response()->noContent();
     }
+
+    public function destroyAll()
+    {
+        auth()->user()->tools()->delete();
+
+        return response()->noContent();
+    }
 }
