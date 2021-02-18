@@ -126,8 +126,12 @@ class ToolControllerTest extends TestCase
      */
     public function should_not_be_able_to_create_a_tool_when_not_logged()
     {
-        $this->json('post', route('api.tools.store'), [])
+        $tool = Tool::factory()->make();
+
+        $this->json('post', route('api.tools.store'), $tool->toArray())
             ->assertUnauthorized();
+
+        $this->assertDatabaseMissing($this->toolTable, $tool->makeHidden('tags')->toArray());
     }
 
     /**
@@ -196,8 +200,10 @@ class ToolControllerTest extends TestCase
     {
         $tool = Tool::factory()->for($this->user)->create();
 
-        $this->json('put', route('api.tools.update', $tool), [])
+        $this->json('put', route('api.tools.update', $tool), ['title' => 'New title'])
             ->assertUnauthorized();
+
+        $this->assertDatabaseHas($this->toolTable, $tool->makeHidden('tags')->toArray());
     }
 
     /**
@@ -208,8 +214,10 @@ class ToolControllerTest extends TestCase
         $tool = Tool::factory()->create();
 
         $this->actingAs($this->user)
-            ->json('put', route('api.tools.update', $tool), [])
+            ->json('put', route('api.tools.update', $tool), ['title' => 'New title'])
             ->assertForbidden();
+
+        $this->assertDatabaseHas($this->toolTable, $tool->makeHidden('tags')->toArray());
     }
 
     /**
@@ -235,6 +243,8 @@ class ToolControllerTest extends TestCase
 
         $this->json('delete', route('api.tools.destroy', $tool))
             ->assertUnauthorized();
+
+        $this->assertDatabaseHas($this->toolTable, $tool->makeHidden('tags')->toArray());
     }
 
     /**
@@ -247,5 +257,7 @@ class ToolControllerTest extends TestCase
         $this->actingAs($this->user)
             ->json('delete', route('api.tools.destroy', $tool))
             ->assertForbidden();
+
+        $this->assertDatabaseHas($this->toolTable, $tool->makeHidden('tags')->toArray());
     }
 }
