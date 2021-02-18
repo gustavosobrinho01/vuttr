@@ -2,7 +2,16 @@
 
 use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\API\Profile\ProfileController;
+use App\Http\Controllers\API\Tool\ToolController;
 use Illuminate\Support\Facades\Route;
+
+Route::prefix('auth')
+    ->name('auth.')
+    ->group(function () {
+        Route::post('login', [AuthController::class, 'login'])->name('login');
+        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
+        Route::get('me', [AuthController::class, 'me'])->name('me');
+    });
 
 Route::prefix('profile')
     ->name('profile.')
@@ -13,11 +22,4 @@ Route::prefix('profile')
         Route::delete('destroy', [ProfileController::class, 'destroy'])->name('destroy');
     });
 
-Route::prefix('auth')
-    ->name('auth.')
-    ->group(function () {
-        Route::post('login', [AuthController::class, 'login'])->name('login');
-        Route::post('logout', [AuthController::class, 'logout'])->name('logout');
-        Route::get('me', [AuthController::class, 'me'])->name('me');
-    });
-
+Route::resource('tools', ToolController::class);

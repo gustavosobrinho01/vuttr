@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\API;
+namespace App\Http\Controllers\API\Tool;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\API\Tool\IndexRequest;
@@ -13,6 +13,7 @@ class ToolController extends Controller
 {
     public function __construct()
     {
+        $this->middleware('auth:sanctum');
         $this->authorizeResource(Tool::class, 'tool');
     }
 

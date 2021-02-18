@@ -32,7 +32,7 @@ class AuthControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_be_able_to_login_an_user()
+    public function should_be_able_to_login()
     {
         $credentials = [
             'email' => self::EMAIL,
@@ -48,7 +48,7 @@ class AuthControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_not_be_able_to_login_an_user_when_he_does_not_exist()
+    public function should_not_be_able_to_login_when_credentials_are_incorrect()
     {
         $credentials = [
             'email' => 'user@non-existing',
@@ -72,7 +72,7 @@ class AuthControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_be_able_to_show_user_logged()
+    public function should_be_able_to_show_logged_user()
     {
         $this->actingAs($this->user)
             ->json('get', route('api.auth.me'))
@@ -84,7 +84,7 @@ class AuthControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_not_be_able_to_show_user_logged()
+    public function should_not_be_able_to_show_user_data_when_not_logged()
     {
         $this->json('get', route('api.auth.me'))
             ->assertUnauthorized();
@@ -93,7 +93,7 @@ class AuthControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_be_able_to_logout_an_user()
+    public function should_be_able_to_logout()
     {
         $this->actingAs($this->user)
             ->json('post', route('api.auth.logout'))
@@ -105,7 +105,7 @@ class AuthControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_not_be_able_to_logout_an_user()
+    public function should_not_be_able_to_logout_user_when_not_logged()
     {
         $this->json('post', route('api.auth.logout'))
             ->assertUnauthorized();

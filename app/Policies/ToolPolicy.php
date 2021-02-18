@@ -11,7 +11,7 @@ class ToolPolicy
     use HandlesAuthorization;
 
     /**
-     * Determine whether the user can view any models.
+     * Determine whether the user can view the model.
      *
      * @param User $user
      * @return mixed

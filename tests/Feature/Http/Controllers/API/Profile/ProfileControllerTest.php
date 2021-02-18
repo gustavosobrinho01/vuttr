@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Http\Controllers\API\Auth;
+namespace Tests\Feature\Http\Controllers\API\Profile;
 
 use App\Models\Tool;
 use App\Models\User;
@@ -39,7 +39,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_be_able_to_register_an_user()
+    public function must_be_able_to_create_a_user()
     {
         $user = collect([
             'name' => 'User test',
@@ -57,7 +57,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_be_able_to_update_an_user()
+    public function must_be_able_to_update_a_user()
     {
         $attributes = $this->user->toArray();
         $attributes['email'] = 'teste@validation.update';
@@ -68,13 +68,13 @@ class ProfileControllerTest extends TestCase
             ->assertOk();
 
         $this->assertDatabaseHas($this->userTable, ['email' => $attributes['email']]);
-        $this->should_encrypt_password_when_new_user_created();
+        $this->must_be_able_to_encrypt_the_password_when_creating_a_user();
     }
 
     /**
      * @test
      */
-    public function should_not_be_able_to_update_an_user()
+    public function should_not_be_able_to_update_a_user_when_not_logged()
     {
         $this->json('put', route('api.profile.update'), [])
             ->assertUnauthorized();
@@ -83,7 +83,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_be_able_to_update_password_an_user()
+    public function must_be_able_to_update_a_user_password()
     {
         $attributes = $this->user->toArray();
         $attributes['email'] = 'teste@validation.update';
@@ -96,13 +96,13 @@ class ProfileControllerTest extends TestCase
             ->assertOk();
 
         $this->assertDatabaseMissing($this->userTable, ['email' => $attributes['email']]);
-        $this->should_encrypt_password_when_new_user_created(self::NEW_PASSWORD);
+        $this->must_be_able_to_encrypt_the_password_when_creating_a_user(self::NEW_PASSWORD);
     }
 
     /**
      * @test
      */
-    public function should_not_be_able_to_update_password_an_user()
+    public function should_not_be_able_to_update_the_user_password_when_not_logged()
     {
         $this->json('put', route('api.profile.updatePassword'), [])
             ->assertUnauthorized();
@@ -112,7 +112,7 @@ class ProfileControllerTest extends TestCase
      * @test
      * @param string|null $password
      */
-    public function should_encrypt_password_when_new_user_created(string $password = null)
+    public function must_be_able_to_encrypt_the_password_when_creating_a_user(string $password = null)
     {
         $this->assertTrue(Hash::check($password ?? self::PASSWORD, $this->user->password));
     }
@@ -120,7 +120,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_be_able_to_destroy_an_user()
+    public function must_be_able_to_delete_a_user()
     {
         Tool::factory()->for($this->user)->count(5);
 
@@ -135,7 +135,7 @@ class ProfileControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_not_be_able_to_destroy_an_user()
+    public function should_not_be_able_to_delete_a_user_when_not_logged()
     {
         $this->json('delete', route('api.profile.destroy'))
             ->assertUnauthorized();
