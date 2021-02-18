@@ -32,7 +32,7 @@ class AuthControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_be_able_to_login()
+    public function must_be_able_to_login()
     {
         $credentials = [
             'email' => self::EMAIL,
@@ -72,7 +72,7 @@ class AuthControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_be_able_to_show_logged_user()
+    public function must_be_able_to_show_logged_user()
     {
         $this->actingAs($this->user)
             ->json('get', route('api.auth.me'))
@@ -93,7 +93,7 @@ class AuthControllerTest extends TestCase
     /**
      * @test
      */
-    public function should_be_able_to_logout()
+    public function must_be_able_to_logout()
     {
         $this->actingAs($this->user)
             ->json('post', route('api.auth.logout'))
