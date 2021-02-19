@@ -44,15 +44,15 @@ class RegisterRequestTest extends TestCase
      */
     public function must_be_able_to_validate_register_rules($formInput, $formInputValue)
     {
-        $registerRequest = new RegisterRequest;
+        $request = new RegisterRequest;
 
         $validator = Validator::make([
             $formInput => $formInputValue
-        ], $registerRequest->rules());
+        ], $request->rules());
 
         $this->assertFalse($validator->passes());
         $this->assertContains($formInput, $validator->errors()->keys());
-        $this->assertTrue($registerRequest->authorize());
+        $this->assertTrue($request->authorize());
     }
 
     /**
@@ -60,15 +60,15 @@ class RegisterRequestTest extends TestCase
      */
     public function must_be_able_to_validate_register_password_confirmation_rule()
     {
-        $registerRequest = new RegisterRequest;
+        $request = new RegisterRequest;
 
         $validator = Validator::make([
             'password' => '123123123',
             'password_confirmation' => '1231231234'
-        ], $registerRequest->rules());
+        ], $request->rules());
 
         $this->assertFalse($validator->passes());
         $this->assertContains('password', $validator->errors()->keys());
-        $this->assertTrue($registerRequest->authorize());
+        $this->assertTrue($request->authorize());
     }
 }

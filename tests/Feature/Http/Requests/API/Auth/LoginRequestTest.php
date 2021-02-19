@@ -34,14 +34,14 @@ class LoginRequestTest extends TestCase
      */
     public function must_be_able_to_validate_login_rules($formInput, $formInputValue)
     {
-        $loginRequest = new LoginRequest;
+        $request = new LoginRequest;
 
         $validator = Validator::make([
             $formInput => $formInputValue
-        ], $loginRequest->rules());
+        ], $request->rules());
 
         $this->assertFalse($validator->passes());
         $this->assertContains($formInput, $validator->errors()->keys());
-        $this->assertTrue($loginRequest->authorize());
+        $this->assertTrue($request->authorize());
     }
 }

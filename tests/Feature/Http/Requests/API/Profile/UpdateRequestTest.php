@@ -13,16 +13,9 @@ class UpdateRequestTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @var User
-     */
-    protected $user;
-
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->user = User::factory()->create();
 
         $this->actingAs($this->user);
     }
@@ -52,15 +45,15 @@ class UpdateRequestTest extends TestCase
      */
     public function must_be_able_to_validate_update_rules($formInput, $formInputValue)
     {
-        $updateRequest = new UpdateRequest;
+        $request = new UpdateRequest;
 
         $validator = Validator::make([
             $formInput => $formInputValue
-        ], $updateRequest->rules());
+        ], $request->rules());
 
         $this->assertFalse($validator->passes());
         $this->assertContains($formInput, $validator->errors()->keys());
-        $this->assertTrue($updateRequest->authorize());
+        $this->assertTrue($request->authorize());
     }
 
     /**
@@ -70,14 +63,14 @@ class UpdateRequestTest extends TestCase
     {
         $user = User::factory()->create();
 
-        $updateRequest = new UpdateRequest;
+        $request = new UpdateRequest;
 
         $validator = Validator::make([
             'email' => $user->email
-        ], $updateRequest->rules());
+        ], $request->rules());
 
         $this->assertFalse($validator->passes());
         $this->assertContains('email', $validator->errors()->keys());
-        $this->assertTrue($updateRequest->authorize());
+        $this->assertTrue($request->authorize());
     }
 }

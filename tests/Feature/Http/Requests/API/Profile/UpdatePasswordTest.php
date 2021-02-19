@@ -13,16 +13,9 @@ class UpdatePasswordTest extends TestCase
 {
     use RefreshDatabase;
 
-    /**
-     * @var User
-     */
-    protected $user;
-
     protected function setUp(): void
     {
         parent::setUp();
-
-        $this->user = User::factory()->create();
 
         $this->actingAs($this->user);
     }
@@ -54,15 +47,15 @@ class UpdatePasswordTest extends TestCase
      */
     public function must_be_able_to_validate_update_password_rules($formInput, $formInputValue)
     {
-        $updatePasswordRequest = new UpdatePasswordRequest;
+        $request = new UpdatePasswordRequest;
 
         $validator = Validator::make([
             $formInput => $formInputValue
-        ], $updatePasswordRequest->rules());
+        ], $request->rules());
 
         $this->assertFalse($validator->passes());
         $this->assertContains($formInput, $validator->errors()->keys());
-        $this->assertTrue($updatePasswordRequest->authorize());
+        $this->assertTrue($request->authorize());
     }
 
     /**
@@ -70,15 +63,15 @@ class UpdatePasswordTest extends TestCase
      */
     public function must_be_able_to_validate_update_password_confirmation_rule()
     {
-        $updatePasswordRequest = new UpdatePasswordRequest;
+        $request = new UpdatePasswordRequest;
 
         $validator = Validator::make([
             'password' => '123123123',
             'password_confirmation' => '1231231234'
-        ], $updatePasswordRequest->rules());
+        ], $request->rules());
 
         $this->assertFalse($validator->passes());
         $this->assertContains('password', $validator->errors()->keys());
-        $this->assertTrue($updatePasswordRequest->authorize());
+        $this->assertTrue($request->authorize());
     }
 }

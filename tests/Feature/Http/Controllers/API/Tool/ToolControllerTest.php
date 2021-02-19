@@ -3,35 +3,12 @@
 namespace Tests\Feature\Http\Controllers\API\Tool;
 
 use App\Models\Tool;
-use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
 class ToolControllerTest extends TestCase
 {
     use RefreshDatabase;
-
-    /**
-     * @var string
-     */
-    protected $toolTable;
-    /**
-     * @var Tool
-     */
-    protected $tool;
-    /**
-     * @var User
-     */
-    protected $user;
-
-    protected function setUp(): void
-    {
-        parent::setUp();
-
-        $this->toolTable = (new Tool())->getTable();
-        $this->tool = Tool::factory()->create();
-        $this->user = User::factory()->create();
-    }
 
     /**
      * @test
@@ -42,7 +19,7 @@ class ToolControllerTest extends TestCase
         $userTool = Tool::factory()->for($this->user)->create();
 
         $this->actingAs($this->user)
-            ->json('get', route('api.tools.index'))
+            ->getJson(route('api.tools.index'))
             ->assertOk()
             ->assertJsonStructure(['data', 'links', 'meta'])
             ->assertJsonCount(1, 'data')
@@ -65,7 +42,7 @@ class ToolControllerTest extends TestCase
         ]);
 
         $this->actingAs($this->user)
-            ->json('get', route('api.tools.index', ['tag' => 'reactjs']))
+            ->getJson(route('api.tools.index', ['tag' => 'reactjs']))
             ->assertOk()
             ->assertJsonStructure(['data', 'links', 'meta'])
             ->assertJsonCount(1, 'data')
@@ -82,7 +59,7 @@ class ToolControllerTest extends TestCase
      */
     public function should_not_be_able_to_list_the_user_tools_when_not_logged()
     {
-        $this->json('get', route('api.tools.index'))
+        $this->getJson(route('api.tools.index'))
             ->assertUnauthorized();
     }
 
@@ -94,7 +71,7 @@ class ToolControllerTest extends TestCase
         $tool = Tool::factory()->create();
 
         $this->actingAs($this->user)
-            ->json('get', route('api.tools.index'))
+            ->getJson(route('api.tools.index'))
             ->assertOk()
             ->assertJsonStructure(['data', 'links', 'meta'])
             ->assertJsonCount(0, 'data')
@@ -111,14 +88,14 @@ class ToolControllerTest extends TestCase
         $tool = Tool::factory()->make();
 
         $this->actingAs($this->user)
-            ->json('post', route('api.tools.store'), $tool->toArray())
+            ->postJson(route('api.tools.store'), $tool->toArray())
             ->assertCreated()
             ->assertJsonStructure(['data'])
             ->assertJsonFragment($tool->makeHidden('user_id')->toArray());
 
-        $this->assertDatabaseMissing($this->toolTable, ['user_id' => $tool->user_id]);
-        $this->assertDatabaseHas($this->toolTable, ['user_id' => $this->user->id]);
-        $this->assertDatabaseHas($this->toolTable, $tool->makeHidden(['user_id', 'tags'])->toArray());
+        $this->assertDatabaseMissing((new Tool)->getTable(), ['user_id' => $tool->user_id]);
+        $this->assertDatabaseHas((new Tool)->getTable(), ['user_id' => $this->user->id]);
+        $this->assertDatabaseHas((new Tool)->getTable(), $tool->makeHidden(['user_id', 'tags'])->toArray());
     }
 
     /**
@@ -128,10 +105,10 @@ class ToolControllerTest extends TestCase
     {
         $tool = Tool::factory()->make();
 
-        $this->json('post', route('api.tools.store'), $tool->toArray())
+        $this->postJson(route('api.tools.store'), $tool->toArray())
             ->assertUnauthorized();
 
-        $this->assertDatabaseMissing($this->toolTable, $tool->makeHidden('tags')->toArray());
+        $this->assertDatabaseMissing((new Tool)->getTable(), $tool->makeHidden('tags')->toArray());
     }
 
     /**
@@ -142,7 +119,7 @@ class ToolControllerTest extends TestCase
         $tool = Tool::factory()->for($this->user)->create();
 
         $this->actingAs($this->user)
-            ->json('get', route('api.tools.show', $tool))
+            ->getJson(route('api.tools.show', $tool))
             ->assertOk()
             ->assertJsonStructure(['data'])
             ->assertJsonFragment($tool->toArray());
@@ -155,7 +132,7 @@ class ToolControllerTest extends TestCase
     {
         $tool = Tool::factory()->for($this->user)->create();
 
-        $this->json('get', route('api.tools.show', $tool))
+        $this->getJson(route('api.tools.show', $tool))
             ->assertUnauthorized();
     }
 
@@ -167,7 +144,7 @@ class ToolControllerTest extends TestCase
         $tool = Tool::factory()->create();
 
         $this->actingAs($this->user)
-            ->json('get', route('api.tools.show', $tool))
+            ->getJson(route('api.tools.show', $tool))
             ->assertForbidden();
     }
 
@@ -183,14 +160,14 @@ class ToolControllerTest extends TestCase
         $tool->description = "New description";
 
         $this->actingAs($this->user)
-            ->json('put', route('api.tools.update', $tool), $tool->toArray())
+            ->putJson(route('api.tools.update', $tool), $tool->toArray())
             ->assertOk()
             ->assertJsonStructure(['data'])
             ->assertJsonFragment($tool->makeHidden('user_id')->toArray());
 
-        $this->assertDatabaseMissing($this->toolTable, ['user_id' => $tool->user_id]);
-        $this->assertDatabaseHas($this->toolTable, ['user_id' => $this->user->id]);
-        $this->assertDatabaseHas($this->toolTable, $tool->makeHidden(['user_id', 'tags'])->toArray());
+        $this->assertDatabaseMissing((new Tool)->getTable(), ['user_id' => $tool->user_id]);
+        $this->assertDatabaseHas((new Tool)->getTable(), ['user_id' => $this->user->id]);
+        $this->assertDatabaseHas((new Tool)->getTable(), $tool->makeHidden(['user_id', 'tags'])->toArray());
     }
 
     /**
@@ -200,10 +177,10 @@ class ToolControllerTest extends TestCase
     {
         $tool = Tool::factory()->for($this->user)->create();
 
-        $this->json('put', route('api.tools.update', $tool), ['title' => 'New title'])
+        $this->putJson(route('api.tools.update', $tool), ['title' => 'New title'])
             ->assertUnauthorized();
 
-        $this->assertDatabaseHas($this->toolTable, $tool->makeHidden('tags')->toArray());
+        $this->assertDatabaseHas((new Tool)->getTable(), $tool->makeHidden('tags')->toArray());
     }
 
     /**
@@ -214,10 +191,10 @@ class ToolControllerTest extends TestCase
         $tool = Tool::factory()->create();
 
         $this->actingAs($this->user)
-            ->json('put', route('api.tools.update', $tool), ['title' => 'New title'])
+            ->putJson(route('api.tools.update', $tool), ['title' => 'New title'])
             ->assertForbidden();
 
-        $this->assertDatabaseHas($this->toolTable, $tool->makeHidden('tags')->toArray());
+        $this->assertDatabaseHas((new Tool)->getTable(), $tool->makeHidden('tags')->toArray());
     }
 
     /**
@@ -228,10 +205,10 @@ class ToolControllerTest extends TestCase
         $tool = Tool::factory()->for($this->user)->create();
 
         $this->actingAs($this->user)
-            ->json('delete', route('api.tools.destroy', $tool))
+            ->deleteJson(route('api.tools.destroy', $tool))
             ->assertNoContent();
 
-        $this->assertDatabaseMissing($this->toolTable, $tool->toArray());
+        $this->assertDatabaseMissing((new Tool)->getTable(), $tool->toArray());
     }
 
     /**
@@ -241,10 +218,10 @@ class ToolControllerTest extends TestCase
     {
         $tool = Tool::factory()->for($this->user)->create();
 
-        $this->json('delete', route('api.tools.destroy', $tool))
+        $this->deleteJson(route('api.tools.destroy', $tool))
             ->assertUnauthorized();
 
-        $this->assertDatabaseHas($this->toolTable, $tool->makeHidden('tags')->toArray());
+        $this->assertDatabaseHas((new Tool)->getTable(), $tool->makeHidden('tags')->toArray());
     }
 
     /**
@@ -255,10 +232,10 @@ class ToolControllerTest extends TestCase
         $tool = Tool::factory()->create();
 
         $this->actingAs($this->user)
-            ->json('delete', route('api.tools.destroy', $tool))
+            ->deleteJson(route('api.tools.destroy', $tool))
             ->assertForbidden();
 
-        $this->assertDatabaseHas($this->toolTable, $tool->makeHidden('tags')->toArray());
+        $this->assertDatabaseHas((new Tool)->getTable(), $tool->makeHidden('tags')->toArray());
     }
 
     /**
@@ -269,11 +246,11 @@ class ToolControllerTest extends TestCase
         $tools = Tool::factory()->for($this->user)->count(5)->create();
 
         $this->actingAs($this->user)
-            ->json('delete', route('api.tools.destroyAll'))
+            ->deleteJson(route('api.tools.destroyAll'))
             ->assertNoContent();
 
         $tools->each(function ($tool) {
-            $this->assertDatabaseMissing($this->toolTable, $tool->toArray());
+            $this->assertDatabaseMissing((new Tool)->getTable(), $tool->toArray());
         });
     }
 
@@ -284,11 +261,11 @@ class ToolControllerTest extends TestCase
     {
         $tools = Tool::factory()->for($this->user)->count(5)->create();
 
-        $this->json('delete', route('api.tools.destroyAll'))
+        $this->deleteJson(route('api.tools.destroyAll'))
             ->assertUnauthorized();
 
         $tools->each(function ($tool) {
-            $this->assertDatabaseHas($this->toolTable, $tool->makeHidden('tags')->toArray());
+            $this->assertDatabaseHas((new Tool)->getTable(), $tool->makeHidden('tags')->toArray());
         });
     }
 }
