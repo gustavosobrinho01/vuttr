@@ -27,7 +27,7 @@ class StoreRequest extends FormRequest
     {
         return [
             'title' => ['required', 'string', 'min:3', 'max:255'],
-            'link' => ['required', 'url', 'min:3', 'max:255', Rule::unique((new Tool())->getTable())->where('user_id', auth()->user()->id)],
+            'link' => ['required', 'url', 'min:3', 'max:255', Rule::unique((new Tool())->getTable())->where('user_id', auth()->id())],
             'description' => ['required', 'string', 'min:3', 'max:1000'],
             'tags' => ['required', 'array', 'min:1'],
         ];

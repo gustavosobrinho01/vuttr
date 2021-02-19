@@ -26,19 +26,8 @@ class UpdateRequest extends FormRequest
     public function rules()
     {
         return [
-            'name' => [
-                'required',
-                'string',
-                'min:3',
-                'max:255'
-            ],
-            'email' => [
-                'required',
-                'email',
-                'min:3',
-                'max:255',
-                Rule::unique((new User)->getTable())->ignore(auth()->id())
-            ],
+            'name' => ['required', 'string', 'min:3', 'max:255'],
+            'email' => ['required', 'email', 'min:3', 'max:255', Rule::unique((new User)->getTable())->ignore(auth()->id())],
         ];
     }
 }

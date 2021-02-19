@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests\API\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Http\FormRequest;
 
 class LoginRequest extends FormRequest
@@ -25,7 +26,7 @@ class LoginRequest extends FormRequest
     {
         return [
             'email' => ['required', 'email', 'min:3', 'max:255'],
-            'password' => ['required', 'string', 'min:3', 'max:255']
+            'password' => ['required', 'string', 'min:' . User::MIN_PASSWORD_LENGTH, 'max:255']
         ];
     }
 }

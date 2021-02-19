@@ -3,6 +3,7 @@
 namespace Tests\Feature\Http\Requests\API\Auth;
 
 use App\Http\Requests\API\Auth\LoginRequest;
+use App\Models\User;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
 use Tests\TestCase;
@@ -20,7 +21,7 @@ class LoginRequestTest extends TestCase
             ['email', 'invalid-email'],
             ['password', null],
             ['password', ''],
-            ['password', Str::random(2)],
+            ['password', Str::random(User::MIN_PASSWORD_LENGTH - 1)],
             ['password', Str::random(256)],
         ];
     }

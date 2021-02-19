@@ -16,6 +16,10 @@ class CurrentPasswordCheckRule implements Rule
      */
     public function passes($attribute, $value)
     {
+        if (auth()->guest()) {
+            return false;
+        }
+
         return Hash::check($value, auth()->user()->password);
     }
 
