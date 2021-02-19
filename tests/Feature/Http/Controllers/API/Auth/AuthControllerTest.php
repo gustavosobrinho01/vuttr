@@ -16,7 +16,7 @@ class AuthControllerTest extends TestCase
     public function must_be_able_to_login()
     {
         $credentials = [
-            'email' => self::EMAIL,
+            'email' => $this->user->email,
             'password' => self::PASSWORD
         ];
 
@@ -41,7 +41,7 @@ class AuthControllerTest extends TestCase
             ->assertJsonValidationErrors(['email']);
 
         $credentials = [
-            'email' => self::EMAIL,
+            'email' => $this->user->email,
             'password' => self::NEW_PASSWORD
         ];
 
