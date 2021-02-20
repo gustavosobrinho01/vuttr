@@ -2,6 +2,7 @@
 
 namespace Tests\Feature\Http\Controllers\API\Auth;
 
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Symfony\Component\HttpFoundation\Response;
 use Tests\TestCase;
@@ -17,7 +18,7 @@ class AuthControllerTest extends TestCase
     {
         $credentials = [
             'email' => $this->user->email,
-            'password' => self::PASSWORD
+            'password' => User::DEFAULT_PASSWORD
         ];
 
         $this->postJson(route('api.auth.login'), $credentials)
@@ -33,7 +34,7 @@ class AuthControllerTest extends TestCase
     {
         $credentials = [
             'email' => 'user@non-existing',
-            'password' => self::PASSWORD
+            'password' => User::DEFAULT_PASSWORD
         ];
 
         $this->postJson(route('api.auth.login'), $credentials)

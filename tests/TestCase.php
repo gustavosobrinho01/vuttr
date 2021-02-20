@@ -9,7 +9,6 @@ abstract class TestCase extends BaseTestCase
 {
     use CreatesApplication;
 
-    const PASSWORD = 'password';
     const NEW_PASSWORD = 'new-password';
 
     /**
@@ -21,8 +20,6 @@ abstract class TestCase extends BaseTestCase
     {
         parent::setUp();
 
-        $this->user = User::factory()->create([
-            'password' => self::PASSWORD
-        ]);
+        $this->user = User::factory()->create();
     }
 }

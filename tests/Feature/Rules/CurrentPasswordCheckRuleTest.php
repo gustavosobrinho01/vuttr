@@ -1,7 +1,8 @@
 <?php
 
-namespace Tests\Unit\Rules;
+namespace Tests\Feature\Rules;
 
+use App\Models\User;
 use App\Rules\CurrentPasswordCheckRule;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -31,7 +32,7 @@ class CurrentPasswordCheckRuleTest extends TestCase
     {
         $currentPasswordCheckRule = new CurrentPasswordCheckRule;
 
-        $validation = $currentPasswordCheckRule->passes('password', 'password');
+        $validation = $currentPasswordCheckRule->passes('password', User::DEFAULT_PASSWORD);
 
         $this->assertFalse($validation);
     }
@@ -45,7 +46,7 @@ class CurrentPasswordCheckRuleTest extends TestCase
 
         $this->actingAs($this->user);
 
-        $validation = $currentPasswordCheckRule->passes('password', 'password');
+        $validation = $currentPasswordCheckRule->passes('password', User::DEFAULT_PASSWORD);
 
         $this->assertTrue($validation);
     }

@@ -20,8 +20,8 @@ class ProfileControllerTest extends TestCase
         $user = collect([
             'name' => 'User test',
             'email' => 'user@test',
-            'password' => self::PASSWORD,
-            'password_confirmation' => self::PASSWORD
+            'password' => User::DEFAULT_PASSWORD,
+            'password_confirmation' => User::DEFAULT_PASSWORD
         ]);
 
         $this->postJson(route('api.profile.register'), $user->toArray())
@@ -63,7 +63,7 @@ class ProfileControllerTest extends TestCase
     {
         $attributes = $this->user->toArray();
         $attributes['email'] = 'teste@validation.update';
-        $attributes['current_password'] = self::PASSWORD;
+        $attributes['current_password'] = User::DEFAULT_PASSWORD;
         $attributes['password'] = self::NEW_PASSWORD;
         $attributes['password_confirmation'] = self::NEW_PASSWORD;
 
@@ -90,7 +90,7 @@ class ProfileControllerTest extends TestCase
      */
     public function must_be_able_to_encrypt_the_password_when_creating_a_user(string $password = null)
     {
-        $this->assertTrue(Hash::check($password ?? self::PASSWORD, $this->user->password));
+        $this->assertTrue(Hash::check($password ?? User::DEFAULT_PASSWORD, $this->user->password));
     }
 
     /**

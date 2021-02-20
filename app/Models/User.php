@@ -14,6 +14,7 @@ class User extends Authenticatable
     use HasApiTokens, HasFactory, Notifiable;
 
     const MIN_PASSWORD_LENGTH = 8;
+    const DEFAULT_PASSWORD = 'password';
 
     protected $fillable = [
         'name',
